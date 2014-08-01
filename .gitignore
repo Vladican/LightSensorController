@@ -1,0 +1,12 @@
+*.cproj
+*.o
+*.mk
+*.elf
+*.hex
+*.eep
+*.d
+*.lss
+*.map
+*.atsln
+*.atsuo
+LightSensorController/Debug/Makefile
