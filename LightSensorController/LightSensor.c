@@ -7,6 +7,7 @@
 #include "LightSensor.h"
 #include "USI_TWI_Master.h"
 
+//initialize I2C bus and power on the sensor
 void init_sensor(){
 	
 	unsigned char message[2];
@@ -16,6 +17,7 @@ void init_sensor(){
 	I2C_write(LIGHT_SENSOR_ADDR, message, 2, TRUE);
 }
 
+//read value of channel 0 of the light sensor
 uint16_t read_ch0(){
 	
 	unsigned char message[2];
@@ -27,6 +29,7 @@ uint16_t read_ch0(){
 	return (*((uint16_t*)message));		
 }
 
+//read value of channel 1 of the light sensor
 uint16_t read_ch1(){
 	
 	unsigned char message[2];
@@ -41,11 +44,10 @@ uint16_t read_ch1(){
 unsigned long ch0;
 unsigned long ch1;
 
+//read the channel 1 and 0 values of the light sensor and convert them to a lux reading
 unsigned long read_lux(){
 	
 	unsigned long chScale;
-	//unsigned long ch0;
-	//unsigned long ch1;
 	unsigned long ratio1;
 	unsigned long ratio;
 	unsigned long temp;
@@ -59,7 +61,7 @@ unsigned long read_lux(){
 	// scale the channel values
 	ch0 = (ch0 * chScale) >> CH_SCALE;
 	ch1 = (ch1 * chScale) >> CH_SCALE;
-	//????????????????????????????????????????????????????????????????????????
+
 	// find the ratio of the channel values (Channel1/Channel0)
 	// protect against divide by zero
 	ratio1 = 0;
@@ -101,7 +103,7 @@ unsigned long read_lux(){
 	temp = ((ch0 * b) - (ch1 * m));
 	// do not allow negative lux value
 	if (temp < 0) temp = 0;
-	// round lsb (2^(LUX_SCALE?1))
+	// round lsb (2^(LUX_SCALE-1))
 	temp += (1 << (LUX_SCALE-1));
 	// strip off fractional portion
 	lux = temp >> LUX_SCALE;
